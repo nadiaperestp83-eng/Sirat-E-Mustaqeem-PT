@@ -27,7 +27,7 @@ class SurahContent extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(left: 32.w),
+                        padding: EdgeInsets.only(left: 12.w),
                         child: Text(
                           currentSurahState.surah.nameEn,
                           style: Theme.of(context)
@@ -40,7 +40,7 @@ class SurahContent extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 32.w),
+                        padding: EdgeInsets.only(left: 12.w),
                         child: Text(
                           '${currentSurahState.surah.place} - ${currentSurahState.surah.ayats} ayat',
                           style: Theme.of(context)
@@ -55,11 +55,11 @@ class SurahContent extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(right: 16.w),
                     child: Text(
-                      currentSurahState.surah.nameAr,
+                      '${currentSurahState.surah.id}',
                       style:
                           Theme.of(context).textTheme.displayMedium!.copyWith(
                                 color: kDarkTextColor,
-                                fontFamily: 'Uthman',
+                                fontFamily: 'arsura',
                               ),
                     ),
                   )

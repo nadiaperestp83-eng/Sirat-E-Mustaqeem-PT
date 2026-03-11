@@ -71,7 +71,7 @@ class AyatCard extends StatelessWidget {
                 Text(
                   randomVerse.verse,
                   style: TextStyle(
-                    fontFamily: GoogleFonts.amiriQuran().fontFamily,
+                    fontFamily: GoogleFonts.zain().fontFamily,
                     fontSize: 20.sp,
                     height: 1.6,
                     color: isDark ? Colors.white : Colors.black87,
