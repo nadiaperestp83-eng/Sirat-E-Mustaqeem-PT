@@ -5,15 +5,23 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../core/util/constants.dart';
 import '../../bottom_tab/bloc/tab/tab_bloc.dart';
+import '../bloc/quran_theme/quran_theme_bloc.dart';
+import '../cubit/quran_reading_cubit.dart';
+import '../bloc/selected_juz/selected_juz_bloc.dart';
+import '../bloc/selected_surah/selected_surah_bloc.dart';
 import '../cubit/quran_cubit.dart' as qc;
 import '../widget/juz_content.dart';
 import '../widget/surah_content.dart';
 import 'option_screen.dart';
 
 class SelectedQuranScreen extends StatelessWidget {
-  const SelectedQuranScreen({required this.surah});
+  const SelectedQuranScreen({
+    required this.surah,
+    this.initialAyatId,
+  });
 
   final bool surah;
+  final int? initialAyatId;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +70,38 @@ class SelectedQuranScreen extends StatelessWidget {
           )
         ],
       ),
-      body: surah ? SurahContent() : JuzContent(),
+      body: BlocBuilder<QuranThemeBloc, QuranThemeState>(
+        builder: (context, themeState) {
+          final isQcfHorizontal = themeState.quranType == 'QCF' &&
+              themeState.qcfScrollDirection == 'Horizontal';
+
+          final axis = isQcfHorizontal ? Axis.horizontal : Axis.vertical;
+
+          return surah
+              ? SurahContent(
+                  scrollDirection: axis,
+                  initialAyatId: initialAyatId,
+                  onLastAyatChanged: (ayatId) {
+                    final surahId = BlocProvider.of<SelectedSurahBloc>(context)
+                        .state
+                        .surah
+                        .id;
+                    BlocProvider.of<QuranReadingCubit>(context)
+                        .saveSurahReading(surahId: surahId, ayatId: ayatId);
+                  },
+                )
+              : JuzContent(
+                  scrollDirection: axis,
+                  initialAyatId: initialAyatId,
+                  onLastAyatChanged: (ayatId) {
+                    final juzId =
+                        BlocProvider.of<SelectedJuzBloc>(context).state.juz.id;
+                    BlocProvider.of<QuranReadingCubit>(context)
+                        .saveJuzReading(juzId: juzId, ayatId: ayatId);
+                  },
+                );
+        },
+      ),
     );
   }
 }

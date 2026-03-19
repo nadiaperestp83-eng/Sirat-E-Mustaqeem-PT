@@ -7,8 +7,12 @@ import 'package:sirat_e_mustaqeem/src/core/util/constants.dart';
 import '../../../core/util/bloc/juz/juz_bloc.dart';
 import '../../../core/util/bloc/surah/surah_bloc.dart';
 import '../../bottom_tab/bloc/tab/tab_bloc.dart' as btb;
+import '../bloc/selected_juz/selected_juz_bloc.dart';
+import '../bloc/selected_surah/selected_surah_bloc.dart';
 import '../bloc/tab/tab_bloc.dart' as qtb;
 import '../cubit/quran_cubit.dart';
+import '../cubit/quran_reading_cubit.dart';
+import '../screen/selected_quran_screen.dart';
 import 'juz_card.dart';
 import 'quran_tab.dart';
 import 'surah_card.dart';
@@ -90,41 +94,205 @@ class QuranScaffold extends StatelessWidget {
             //   height: 16.h,
             // ),
             QuranTab(),
-            GestureDetector(
-              onTap: () {},
-              child: Container(
-                margin: EdgeInsets.symmetric(
-                  horizontal: 12.h,
-                  vertical: 10.h,
-                ),
-                padding: EdgeInsets.symmetric(
-                  vertical: 12.h,
-                  horizontal: 10.h,
-                ),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withValues(
-                        alpha: 0.15,
-                      ),
-                  borderRadius: kAppIconBorderRadius,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Continue Reading Surah Al-Baqara",
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: Theme.of(context).primaryColor,
+            BlocBuilder<QuranReadingCubit, QuranReadingState>(
+              builder: (context, readingState) {
+                if (!readingState.hasLastReading) {
+                  return const SizedBox.shrink();
+                }
+
+                final fromNav =
+                    BlocProvider.of<QuranCubit>(context).state.fromNav;
+                final lastAyatId = readingState.lastAyatId;
+
+                if (lastAyatId == null) {
+                  return const SizedBox.shrink();
+                }
+
+                if (readingState.lastMode == 'surah') {
+                  return BlocBuilder<SurahBloc, SurahState>(
+                    builder: (context, surahState) {
+                      final lastSurahId = readingState.lastSurahId;
+                      if (lastSurahId == null) return const SizedBox.shrink();
+
+                      final index = surahState.surahs.surahs
+                          .indexWhere((s) => s.id == lastSurahId);
+
+                      if (index < 0) return const SizedBox.shrink();
+
+                      final lastSurahName =
+                          surahState.surahs.surahs[index].nameEn;
+
+                      return GestureDetector(
+                        onTap: () {
+                          QuranReadingCubit? parentCubit;
+                          try {
+                            parentCubit =
+                                BlocProvider.of<QuranReadingCubit>(context);
+                          } catch (_) {
+                            parentCubit = null;
+                          }
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => BlocProvider(
+                                create: (context) =>
+                                    SelectedSurahBloc(surahState.surahs, index),
+                                child: BlocProvider(
+                                  create: (context) => QuranCubit(fromNav),
+                                  child: parentCubit != null
+                                      ? BlocProvider.value(
+                                          value: parentCubit,
+                                          child: SelectedQuranScreen(
+                                            surah: true,
+                                            initialAyatId: lastAyatId,
+                                          ),
+                                        )
+                                      : BlocProvider(
+                                          create: (context) =>
+                                              QuranReadingCubit(),
+                                          child: SelectedQuranScreen(
+                                            surah: true,
+                                            initialAyatId: lastAyatId,
+                                          ),
+                                        ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                            horizontal: 12.h,
+                            vertical: 10.h,
                           ),
-                    ),
-                    Icon(
-                      Icons.arrow_forward,
-                      color: Theme.of(context).primaryColor,
-                    )
-                  ],
-                ),
-              ),
+                          padding: EdgeInsets.symmetric(
+                            vertical: 12.h,
+                            horizontal: 10.h,
+                          ),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor.withValues(
+                                  alpha: 0.15,
+                                ),
+                            borderRadius: kAppIconBorderRadius,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Continue Reading Surah $lastSurahName",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                              ),
+                              Icon(
+                                Icons.arrow_forward,
+                                color: Theme.of(context).primaryColor,
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
+
+                if (readingState.lastMode == 'juz') {
+                  return BlocBuilder<JuzBloc, JuzState>(
+                    builder: (context, juzState) {
+                      final lastJuzId = readingState.lastJuzId;
+                      if (lastJuzId == null) return const SizedBox.shrink();
+
+                      final index = juzState.juzs.juzs
+                          .indexWhere((j) => j.id == lastJuzId);
+
+                      if (index < 0) return const SizedBox.shrink();
+
+                      final lastJuzName = juzState.juzs.juzs[index].englishName;
+
+                      return GestureDetector(
+                        onTap: () {
+                          QuranReadingCubit? parentCubit;
+                          try {
+                            parentCubit =
+                                BlocProvider.of<QuranReadingCubit>(context);
+                          } catch (_) {
+                            parentCubit = null;
+                          }
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => BlocProvider(
+                                create: (context) =>
+                                    SelectedJuzBloc(juzState.juzs, index),
+                                child: BlocProvider(
+                                  create: (context) => QuranCubit(fromNav),
+                                  child: parentCubit != null
+                                      ? BlocProvider.value(
+                                          value: parentCubit,
+                                          child: SelectedQuranScreen(
+                                            surah: false,
+                                            initialAyatId: lastAyatId,
+                                          ),
+                                        )
+                                      : BlocProvider(
+                                          create: (context) =>
+                                              QuranReadingCubit(),
+                                          child: SelectedQuranScreen(
+                                            surah: false,
+                                            initialAyatId: lastAyatId,
+                                          ),
+                                        ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                            horizontal: 12.h,
+                            vertical: 10.h,
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            vertical: 12.h,
+                            horizontal: 10.h,
+                          ),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor.withValues(
+                                  alpha: 0.15,
+                                ),
+                            borderRadius: kAppIconBorderRadius,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Continue Reading $lastJuzName",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                              ),
+                              Icon(
+                                Icons.arrow_forward,
+                                color: Theme.of(context).primaryColor,
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
+
+                return const SizedBox.shrink();
+              },
             ),
             BlocBuilder<qtb.TabBloc, qtb.TabState>(
               builder: (context, tabState) {

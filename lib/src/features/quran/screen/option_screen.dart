@@ -5,7 +5,30 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../core/util/constants.dart';
 import '../../utils/custom_switch.dart';
+import '../../utils/bottom_sheet_select.dart';
 import '../bloc/quran_theme/quran_theme_bloc.dart';
+
+const List<String> _quranTypes = ['Normal', 'QCF'];
+const List<String> _translationModes = [
+  'Urdu',
+  'English (Saheeh)',
+  'English (Clear Quran)',
+  'Turkish (Saheeh)',
+  'Malayalam (Abdul Hameed)',
+  'Persian (Hussein Dari)',
+  'French (Hamidullah)',
+  'Italian (Piccardo)',
+  'Dutch (Siregar)',
+  'Portuguese',
+  'Russian (Kuliev)',
+  'Bengali',
+  'Indonesian',
+  'Chinese',
+  'Spanish',
+  'Swedish',
+];
+const List<String> _normalQuranFonts = ['Uthman', 'arsura'];
+const List<String> _qcfScrollDirections = ['Vertical', 'Horizontal'];
 
 class OptionScreen extends StatelessWidget {
   const OptionScreen();
@@ -27,6 +50,10 @@ class OptionScreen extends StatelessWidget {
                 SizedBox(
                   height: 16.h,
                 ),
+                QuranTypeOption(),
+                Divider(),
+                QcfScrollDirectionOption(),
+                Divider(),
                 ShowTranslationOption(),
                 Divider(),
                 TranslationMode(),
@@ -88,41 +115,18 @@ class TranslationMode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Translation mode',
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(color: Theme.of(context).primaryColor),
-          ),
-          DropdownButtonHideUnderline(
-            child: BlocBuilder<QuranThemeBloc, QuranThemeState>(
-              builder: (context, state) {
-                return DropdownButton(
-                  items: List.generate(
-                    1,
-                    (index) => DropdownMenuItem(
-                      child: BlocBuilder<QuranThemeBloc, QuranThemeState>(
-                        builder: (context, state) {
-                          return Text(
-                            state.translationMode,
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  onChanged: (value) {},
-                );
-              },
-            ),
-          )
-        ],
-      ),
+    return BlocBuilder<QuranThemeBloc, QuranThemeState>(
+      builder: (context, state) {
+        return BottomSheetSelect<String>(
+          label: 'Translation mode',
+          value: state.translationMode,
+          options: _translationModes,
+          onChanged: (value) {
+            BlocProvider.of<QuranThemeBloc>(context)
+                .add(SwitchTranslationMode(value));
+          },
+        );
+      },
     );
   }
 }
@@ -166,61 +170,69 @@ class QuranFontSize extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Text(
-              'Quran font size',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge!
-                  .copyWith(color: Theme.of(context).primaryColor),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              if (BlocProvider.of<QuranThemeBloc>(context).state.quranFontSize >
-                  1)
-                BlocProvider.of<QuranThemeBloc>(context)
-                    .add(ReduceQuranFontSize());
-            },
-            child: SvgPicture.asset(
-              'assets/images/quran_icon/svg/minus.svg',
-              color: Theme.of(context).primaryColor,
-              width: 24.w,
-            ),
-          ),
-          SizedBox(
-            width: 8.w,
-          ),
-          BlocBuilder<QuranThemeBloc, QuranThemeState>(
-            builder: (context, state) {
-              return Text(
+    return BlocBuilder<QuranThemeBloc, QuranThemeState>(
+      builder: (context, state) {
+        if (state.quranType == 'QCF') {
+          return const SizedBox.shrink();
+        }
+
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.0.h),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  'Quran font size',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge!
+                      .copyWith(color: Theme.of(context).primaryColor),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  if (BlocProvider.of<QuranThemeBloc>(context)
+                          .state
+                          .quranFontSize >
+                      1) {
+                    BlocProvider.of<QuranThemeBloc>(context)
+                        .add(ReduceQuranFontSize());
+                  }
+                },
+                child: SvgPicture.asset(
+                  'assets/images/quran_icon/svg/minus.svg',
+                  color: Theme.of(context).primaryColor,
+                  width: 24.w,
+                ),
+              ),
+              SizedBox(
+                width: 8.w,
+              ),
+              Text(
                 '${state.quranFontSize}',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
-              );
-            },
+              ),
+              SizedBox(
+                width: 8.w,
+              ),
+              GestureDetector(
+                onTap: () {
+                  BlocProvider.of<QuranThemeBloc>(context)
+                      .add(AddQuranFontSize());
+                },
+                child: SvgPicture.asset(
+                  'assets/images/quran_icon/svg/add.svg',
+                  color: Theme.of(context).primaryColor,
+                  width: 24.w,
+                ),
+              ),
+            ],
           ),
-          SizedBox(
-            width: 8.w,
-          ),
-          GestureDetector(
-            onTap: () {
-              BlocProvider.of<QuranThemeBloc>(context).add(AddQuranFontSize());
-            },
-            child: SvgPicture.asset(
-              'assets/images/quran_icon/svg/add.svg',
-              color: Theme.of(context).primaryColor,
-              width: 24.w,
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -230,41 +242,22 @@ class QuranFontFamily extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Quran font family',
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(color: Theme.of(context).primaryColor),
-          ),
-          DropdownButtonHideUnderline(
-            child: BlocBuilder<QuranThemeBloc, QuranThemeState>(
-              builder: (context, state) {
-                return DropdownButton(
-                  items: List.generate(
-                    1,
-                    (index) => DropdownMenuItem(
-                      child: BlocBuilder<QuranThemeBloc, QuranThemeState>(
-                        builder: (context, state) {
-                          return Text(
-                            state.quranFontFamily,
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  onChanged: (value) {},
-                );
-              },
-            ),
-          )
-        ],
-      ),
+    return BlocBuilder<QuranThemeBloc, QuranThemeState>(
+      builder: (context, state) {
+        if (state.quranType == 'QCF') {
+          return const SizedBox.shrink();
+        }
+
+        return BottomSheetSelect<String>(
+          label: 'Quran font family',
+          value: state.quranFontFamily,
+          options: _normalQuranFonts,
+          onChanged: (value) {
+            BlocProvider.of<QuranThemeBloc>(context)
+                .add(SetQuranFontFamily(value));
+          },
+        );
+      },
     );
   }
 }
@@ -376,6 +369,51 @@ class TranslationFontFamily extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+}
+
+class QuranTypeOption extends StatelessWidget {
+  const QuranTypeOption();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<QuranThemeBloc, QuranThemeState>(
+      builder: (context, state) {
+        return BottomSheetSelect<String>(
+          label: 'Quran type',
+          value: state.quranType,
+          options: _quranTypes,
+          onChanged: (value) {
+            BlocProvider.of<QuranThemeBloc>(context).add(SetQuranType(value));
+          },
+        );
+      },
+    );
+  }
+}
+
+class QcfScrollDirectionOption extends StatelessWidget {
+  const QcfScrollDirectionOption();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<QuranThemeBloc, QuranThemeState>(
+      builder: (context, state) {
+        if (state.quranType != 'QCF') {
+          return const SizedBox.shrink();
+        }
+
+        return BottomSheetSelect<String>(
+          label: 'QCF scroll direction',
+          value: state.qcfScrollDirection,
+          options: _qcfScrollDirections,
+          onChanged: (value) {
+            BlocProvider.of<QuranThemeBloc>(context)
+                .add(SetQcfScrollDirection(value));
+          },
+        );
+      },
     );
   }
 }
