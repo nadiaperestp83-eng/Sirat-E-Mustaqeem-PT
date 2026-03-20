@@ -1,3 +1,5 @@
+import 'package:quran/quran.dart' as quran_package;
+
 class Quran {
   final int ayatId;
   final int ayatNumber;
@@ -28,6 +30,44 @@ class Quran {
     required this.withoutAerab,
     required this.favorite,
   });
+
+  static const Map<String, quran_package.Translation> translationByMode = {
+    'English (Saheeh)': quran_package.Translation.enSaheeh,
+    'English (Clear Quran)': quran_package.Translation.enClearQuran,
+    'Turkish (Saheeh)': quran_package.Translation.trSaheeh,
+    'Malayalam (Abdul Hameed)': quran_package.Translation.mlAbdulHameed,
+    'Persian (Hussein Dari)': quran_package.Translation.faHusseinDari,
+    'French (Hamidullah)': quran_package.Translation.frHamidullah,
+    'Italian (Piccardo)': quran_package.Translation.itPiccardo,
+    'Dutch (Siregar)': quran_package.Translation.nlSiregar,
+    'Portuguese': quran_package.Translation.portuguese,
+    'Russian (Kuliev)': quran_package.Translation.ruKuliev,
+    'Urdu': quran_package.Translation.urdu,
+    'Bengali': quran_package.Translation.bengali,
+    'Indonesian': quran_package.Translation.indonesian,
+    'Chinese': quran_package.Translation.chinese,
+    'Spanish': quran_package.Translation.spanish,
+    'Swedish': quran_package.Translation.swedish,
+  };
+
+  String getTranslationText(
+    String translationMode, {
+    int? verseNumberOverride,
+  }) {
+    final effectiveVerseNumber = verseNumberOverride ?? ayatNumber;
+    final effectiveTranslation =
+        translationByMode[translationMode] ?? quran_package.Translation.urdu;
+
+    try {
+      return quran_package.getVerseTranslation(
+        surahId,
+        effectiveVerseNumber,
+        translation: effectiveTranslation,
+      );
+    } catch (_) {
+      return urduTranslation;
+    }
+  }
 }
 
 class Qurans {

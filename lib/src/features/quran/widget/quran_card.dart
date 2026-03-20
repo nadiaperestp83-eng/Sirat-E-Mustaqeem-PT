@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:qcf_quran/qcf_quran.dart';
 
 import '../../../core/util/bloc/quran/quran_bloc.dart';
 import '../../../core/util/constants.dart';
@@ -11,15 +12,34 @@ import '../bloc/quran_theme/quran_theme_bloc.dart';
 import '../controller/quran_controller.dart';
 
 class QuranCard extends StatelessWidget {
-  const QuranCard(this.quran, {this.bookmarkScreen = false});
+  const QuranCard(
+    this.quran, {
+    this.bookmarkScreen = false,
+    this.qcfVerseNumberOverride,
+  });
 
   final Quran quran;
   final bool bookmarkScreen;
+  final int? qcfVerseNumberOverride;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<QuranThemeBloc, QuranThemeState>(
       builder: (context, state) {
+        final bool isQcfMode = state.quranType == 'QCF' ||
+            state.quranFontFamily.trim().toLowerCase() == 'qcf';
+
+        final int baseVerseNumber = qcfVerseNumberOverride ?? quran.ayatNumber;
+        final int? resolvedQcfVerseNumber = isQcfMode
+            ? _resolveValidQcfVerseNumber(
+                surahNumber: quran.surahId,
+                baseVerseNumber: baseVerseNumber,
+              )
+            : null;
+
+        final int? verseNumberOverrideForQcf =
+            resolvedQcfVerseNumber ?? qcfVerseNumberOverride;
+
         return Container(
           padding: kPagePadding,
           child: Row(
@@ -66,23 +86,22 @@ class QuranCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(
-                        state.withArabs
-                            ? '${quran.arabicText}'
-                            : '${quran.withoutAerab}',
-                        textAlign: TextAlign.end,
-                        style:
-                            Theme.of(context).textTheme.displaySmall!.copyWith(
-                                  fontFamily: 'Uthman',
-                                  fontSize: state.quranFontSize,
-                                ),
+                      _QuranArabicText(
+                        quran: quran,
+                        withArabs: state.withArabs,
+                        selectedFontFamily: state.quranFontFamily,
+                        fontSize: state.quranFontSize,
+                        qcfVerseNumberOverride: verseNumberOverrideForQcf,
                       ),
                       SizedBox(
                         height: 8.h,
                       ),
                       if (state.showTranslation)
                         Text(
-                          '${quran.urduTranslation}',
+                          quran.getTranslationText(
+                            state.translationMode,
+                            verseNumberOverride: verseNumberOverrideForQcf,
+                          ),
                           textAlign: TextAlign.end,
                           style:
                               Theme.of(context).textTheme.titleLarge!.copyWith(
@@ -101,6 +120,95 @@ class QuranCard extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+int? _resolveValidQcfVerseNumber({
+  required int surahNumber,
+  required int baseVerseNumber,
+}) {
+  final candidates = <int>[
+    baseVerseNumber,
+    baseVerseNumber - 1,
+    baseVerseNumber + 1,
+  ];
+
+  for (final candidate in candidates) {
+    if (candidate < 1) continue;
+    try {
+      getPageNumber(surahNumber, candidate);
+      return candidate;
+    } catch (_) {
+    }
+  }
+
+  return null;
+}
+
+class _QuranArabicText extends StatelessWidget {
+  const _QuranArabicText({
+    required this.quran,
+    required this.withArabs,
+    required this.selectedFontFamily,
+    required this.fontSize,
+    this.qcfVerseNumberOverride,
+  });
+
+  final Quran quran;
+  final bool withArabs;
+  final String selectedFontFamily;
+  final double fontSize;
+  final int? qcfVerseNumberOverride;
+
+  bool get _shouldUseQcf =>
+      withArabs && selectedFontFamily.trim().toLowerCase() == 'qcf';
+
+  bool _isValidQcfVerse(int surahNumber, int verseNumber) {
+    try {
+      getPageNumber(surahNumber, verseNumber);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_shouldUseQcf) {
+      final surahNumber = quran.surahId;
+      final baseVerseNumber = qcfVerseNumberOverride ?? quran.ayatNumber;
+      final candidates = <int>[
+        baseVerseNumber,
+        baseVerseNumber + 1,
+      ];
+
+      for (final candidate in candidates) {
+        if (candidate < 1) continue;
+        if (!_isValidQcfVerse(surahNumber, candidate)) continue;
+
+        return Align(
+          alignment: Alignment.centerRight,
+          child: QcfVerse(
+            surahNumber: surahNumber,
+            verseNumber: candidate,
+            fontSize: fontSize,
+            textColor: Theme.of(context).textTheme.displaySmall?.color ??
+                Theme.of(context).primaryColor,
+            sp: 1.sp,
+            h: 1.h,
+          ),
+        );
+      }
+    }
+
+    return Text(
+      withArabs ? quran.arabicText : quran.withoutAerab,
+      textAlign: TextAlign.end,
+      style: Theme.of(context).textTheme.displaySmall!.copyWith(
+            fontFamily: 'Uthman',
+            fontSize: fontSize,
+          ),
     );
   }
 }
