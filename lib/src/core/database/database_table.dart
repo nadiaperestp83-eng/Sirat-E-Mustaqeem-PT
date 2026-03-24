@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../error/exceptions.dart';
-import '../util/bloc/allah_names/allah_name_bloc.dart';
 import '../util/bloc/dua/dua_bloc.dart';
 import '../util/bloc/juz/juz_bloc.dart';
 import '../util/bloc/quran/quran_bloc.dart';
@@ -15,12 +14,6 @@ class DatabaseTable {
   static Future<void> cachedDataFromDb(
       Database db, BuildContext context) async {
     try {
-      List<Map<String, Object?>> allahNames = await db.query('allah_names');
-
-      BlocProvider.of<AllahNameBloc>(context).add(
-        FetchAllahName(allahNames),
-      );
-
       List<Map<String, Object?>> duas = await db.query('dua');
 
       BlocProvider.of<DuaBloc>(context).add(
