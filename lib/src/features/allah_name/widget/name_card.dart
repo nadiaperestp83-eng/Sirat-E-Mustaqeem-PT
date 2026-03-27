@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:muslim_data_flutter/muslim_data_flutter.dart';
 
-import '../bloc/name_bloc.dart';
 import '../screen/name_screen.dart';
 
 class NameCard extends StatelessWidget {
@@ -17,10 +15,7 @@ class NameCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) => NameBloc(name),
-              child: NameScreen(),
-            ),
+            builder: (context) => NameScreen(name),
           ),
         );
       },

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/util/bloc/prayer_timing_bloc/timing_bloc.dart';
-import '../../utils/sirat_card.dart';
 import 'prayer_timing_widget.dart';
 
 class KiblatCard extends StatelessWidget {
@@ -26,54 +25,55 @@ class KiblatCard extends StatelessWidget {
       final t = DateTime(now.year, now.month, now.day, hour, min);
       if (now.isBefore(t)) return i;
     }
-    return 0; 
+    return 0;
   }
 
   @override
   Widget build(BuildContext context) {
-    return SiratCard(
-      margin: EdgeInsets.zero,
-      child: Container(
-        decoration: BoxDecoration(
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.dark
+            ? Theme.of(context).cardColor
+            : Theme.of(context).scaffoldBackgroundColor,
+        border: Border.all(
           color: Theme.of(context).brightness == Brightness.dark
-              ? Theme.of(context).cardColor
-              : Theme.of(context).scaffoldBackgroundColor,
-          borderRadius: BorderRadius.circular(10.r),
+              ? Colors.white.withValues(alpha: 0.1)
+              : Colors.black.withValues(alpha: 0.05),
         ),
-        child: BlocBuilder<TimingBloc, TimingState>(
-          builder: (context, state) {
-            if (state is TimingLoaded) {
-              final items = [
-                _PrayerItem('Fazr', state.timing.data.timings.fajr, _fajrIcon),
-                _PrayerItem(
-                    'Sunrise', state.timing.data.timings.sunrise, _sunriseIcon),
-                _PrayerItem('Dhuhr', state.timing.data.timings.dhuhr, _dhuhrIcon),
-                _PrayerItem('Asr', state.timing.data.timings.asr, _asrIcon),
-                _PrayerItem(
-                    'Maghrib', state.timing.data.timings.maghrib, _maghribIcon),
-                _PrayerItem('Isha', state.timing.data.timings.isha, _ishaIcon),
-              ];
+        borderRadius: BorderRadius.circular(10.r),
+      ),
+      child: BlocBuilder<TimingBloc, TimingState>(
+        builder: (context, state) {
+          if (state is TimingLoaded) {
+            final items = [
+              _PrayerItem('Fazr', state.timing.data.timings.fajr, _fajrIcon),
+              _PrayerItem(
+                  'Sunrise', state.timing.data.timings.sunrise, _sunriseIcon),
+              _PrayerItem('Dhuhr', state.timing.data.timings.dhuhr, _dhuhrIcon),
+              _PrayerItem('Asr', state.timing.data.timings.asr, _asrIcon),
+              _PrayerItem(
+                  'Maghrib', state.timing.data.timings.maghrib, _maghribIcon),
+              _PrayerItem('Isha', state.timing.data.timings.isha, _ishaIcon),
+            ];
 
-              final nextIdx =
-                  _nextPrayerIndex(items.map((e) => e.time).toList());
+            final nextIdx = _nextPrayerIndex(items.map((e) => e.time).toList());
 
-              return Row(
-                children: [
-                  for (int i = 0; i < items.length; i++)
-                    Expanded(
-                      child: PrayerTimingWidget(
-                        title: items[i].title,
-                        time: items[i].time,
-                        iconAsset: items[i].iconAsset,
-                        selected: i == nextIdx,
-                      ),
+            return Row(
+              children: [
+                for (int i = 0; i < items.length; i++)
+                  Expanded(
+                    child: PrayerTimingWidget(
+                      title: items[i].title,
+                      time: items[i].time,
+                      iconAsset: items[i].iconAsset,
+                      selected: i == nextIdx,
                     ),
-                ],
-              );
-            }
-            return SizedBox();
-          },
-        ),
+                  ),
+              ],
+            );
+          }
+          return SizedBox();
+        },
       ),
     );
   }

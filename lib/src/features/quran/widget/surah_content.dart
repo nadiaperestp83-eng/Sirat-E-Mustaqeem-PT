@@ -7,7 +7,6 @@ import '../../../core/util/constants.dart';
 import '../../../core/util/model/quran.dart';
 import '../bloc/selected_surah/selected_surah_bloc.dart';
 import 'quran_card.dart';
-import 'surah_scroll_selection.dart';
 
 class SurahContent extends StatefulWidget {
   const SurahContent({
@@ -165,7 +164,7 @@ class _SurahContentState extends State<SurahContent> {
                           Padding(
                             padding: EdgeInsets.only(left: 12.w),
                             child: Text(
-                              currentSurahState.surah.nameEn,
+                              currentSurahState.surah.nameAr,
                               style: Theme.of(context)
                                   .textTheme
                                   .displaySmall!
@@ -178,7 +177,7 @@ class _SurahContentState extends State<SurahContent> {
                           Padding(
                             padding: EdgeInsets.only(left: 12.w),
                             child: Text(
-                              '${currentSurahState.surah.place} - ${currentSurahState.surah.ayats} ayat',
+                              '${currentSurahState.surah.place} - ${currentSurahState.surah.ayats} asdf',
                               style: Theme.of(context)
                                   .textTheme
                                   .titleLarge!
@@ -204,8 +203,8 @@ class _SurahContentState extends State<SurahContent> {
                     ],
                   ),
                   SizedBox(height: 8.h),
-                  SurahScrollSelection(),
-                  SizedBox(height: 16.h),
+                  // SurahScrollSelection(),
+                  // SizedBox(height: 16.h),
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
