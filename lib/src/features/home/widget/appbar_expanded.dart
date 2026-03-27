@@ -9,6 +9,7 @@ import 'package:sirat_e_mustaqeem/src/features/home/widget/address_widget.dart';
 import '../../../core/util/bloc/prayer_time_config/prayer_time_config_bloc.dart';
 import '../../../core/util/bloc/theme/theme_bloc.dart';
 import 'kiblat_card.dart';
+import 'upcoming_prayer_text.dart';
 
 class AppBarExpanded extends StatelessWidget {
   const AppBarExpanded({super.key});
@@ -99,6 +100,8 @@ class AppBarExpanded extends StatelessWidget {
                         fontSize: 28.sp,
                       ),
                 ),
+                SizedBox(height: 6.h),
+                const UpcomingPrayerText(),
                 AddressWidget(),
                 Padding(
                   padding: EdgeInsets.symmetric(
