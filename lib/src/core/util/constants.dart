@@ -33,6 +33,7 @@ const Color kDarkError = Color(0xFFD0524A);
 
 const Duration kAnimationDuration = Duration(milliseconds: 300);
 const Curve kAnimationCurve = Curves.easeInOut;
+const double kCategoryTileHeight = 58;
 
 EdgeInsets kPagePadding = EdgeInsets.symmetric(
   horizontal: 12.w,

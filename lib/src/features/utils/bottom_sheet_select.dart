@@ -11,6 +11,10 @@ class BottomSheetSelect<T> extends StatelessWidget {
     required this.options,
     required this.onChanged,
     this.optionLabelBuilder,
+    this.optionBuilder,
+    this.selectedLabelBuilder,
+    this.dense = false,
+    this.shrinkWrapWidth = false,
   });
 
   final String label;
@@ -18,75 +22,136 @@ class BottomSheetSelect<T> extends StatelessWidget {
   final List<T> options;
   final ValueChanged<T> onChanged;
   final String Function(T value)? optionLabelBuilder;
+  final Widget Function(BuildContext context, T option, bool isSelected)?
+      optionBuilder;
+  final String Function(T value)? selectedLabelBuilder;
+
+  final bool dense;
+  final bool shrinkWrapWidth;
 
   String _optionLabel(T item) => optionLabelBuilder?.call(item) ?? '$item';
+  String _selectedLabel(T item) =>
+      selectedLabelBuilder?.call(item) ?? _optionLabel(item);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final selectedTextStyle = theme.textTheme.bodyMedium!.copyWith(
+    final baseSelectedStyle = theme.textTheme.bodyMedium!.copyWith(
       color: theme.primaryColor,
       fontWeight: FontWeight.w600,
     );
+    final selectedTextStyle =
+        dense ? baseSelectedStyle.copyWith(height: 1.15) : baseSelectedStyle;
 
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
+    final outerVertical = dense ? 0.0 : 8.0.h;
+    final innerPadding = dense
+        ? EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h)
+        : EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h);
+    final iconGap = dense ? 6.w : 8.w;
+
+    Widget valuePill() {
+      final labelText = _selectedLabel(value);
+      final maxPillTextWidth = MediaQuery.sizeOf(context).width * 0.52;
+
+      Widget selectedValueText() {
+        if (shrinkWrapWidth) {
+          return ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: maxPillTextWidth),
             child: Text(
-              label,
-              style: theme.textTheme.titleLarge!.copyWith(
-                color: theme.primaryColor,
-              ),
+              labelText,
+              style: selectedTextStyle,
+              maxLines: dense ? 2 : 3,
+              overflow: TextOverflow.ellipsis,
+              softWrap: true,
             ),
-          ),
-          InkWell(
-            borderRadius: BorderRadius.circular(8.r),
-            onTap: () async {
-              await showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                shape: RoundedRectangleBorder(
-                  borderRadius: kBottomSheetBorderRadius,
-                ),
-                builder: (context) {
-                  return _BottomSheetSelectContent<T>(
-                    label: label,
-                    value: value,
-                    options: options,
-                    optionLabelBuilder: optionLabelBuilder,
-                    onChanged: onChanged,
-                  );
-                },
+          );
+        }
+        return Text(
+          labelText,
+          style: selectedTextStyle,
+          maxLines: dense ? 2 : 3,
+          overflow: TextOverflow.ellipsis,
+          softWrap: true,
+        );
+      }
+
+      return InkWell(
+        borderRadius: BorderRadius.circular(8.r),
+        onTap: () async {
+          await showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            shape: RoundedRectangleBorder(
+              borderRadius: kBottomSheetBorderRadius,
+            ),
+            builder: (context) {
+              return _BottomSheetSelectContent<T>(
+                label: label,
+                value: value,
+                options: options,
+                optionLabelBuilder: optionLabelBuilder,
+                optionBuilder: optionBuilder,
+                onChanged: onChanged,
               );
             },
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 2.h),
-              decoration: BoxDecoration(
-                color: theme.scaffoldBackgroundColor,
-                borderRadius: BorderRadius.circular(8.r),
-                border: Border.all(
-                  color: theme.colorScheme.surface,
-                  width: 1.2,
+          );
+        },
+        child: Container(
+          width: shrinkWrapWidth ? null : double.infinity,
+          padding: innerPadding,
+          decoration: BoxDecoration(
+            color: theme.scaffoldBackgroundColor,
+            borderRadius: BorderRadius.circular(8.r),
+            border: Border.all(
+              color: theme.colorScheme.surface,
+              width: 1.2,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: shrinkWrapWidth ? MainAxisSize.min : MainAxisSize.max,
+            children: [
+              if (shrinkWrapWidth)
+                selectedValueText()
+              else
+                Expanded(child: selectedValueText()),
+              SizedBox(width: iconGap),
+              SvgPicture.asset(
+                'assets/images/dua_icon/svg/dropdown.svg',
+                color: theme.primaryColor,
+                width: dense ? 18.w : 20.w,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (shrinkWrapWidth && label.isEmpty) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: outerVertical),
+        child: valuePill(),
+      );
+    }
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: outerVertical),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (label.isNotEmpty)
+            Expanded(
+              child: Text(
+                label,
+                style: theme.textTheme.titleLarge!.copyWith(
+                  color: theme.primaryColor,
                 ),
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    _optionLabel(value),
-                    style: selectedTextStyle,
-                  ),
-                  SizedBox(width: 8.w),
-                  SvgPicture.asset(
-                    'assets/images/dua_icon/svg/dropdown.svg',
-                    color: theme.primaryColor,
-                    width: 20.w,
-                  ),
-                ],
-              ),
+            ),
+          Flexible(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: valuePill(),
             ),
           ),
         ],
@@ -102,6 +167,7 @@ class _BottomSheetSelectContent<T> extends StatelessWidget {
     required this.options,
     required this.onChanged,
     this.optionLabelBuilder,
+    this.optionBuilder,
   });
 
   final String label;
@@ -109,6 +175,8 @@ class _BottomSheetSelectContent<T> extends StatelessWidget {
   final List<T> options;
   final ValueChanged<T> onChanged;
   final String Function(T value)? optionLabelBuilder;
+  final Widget Function(BuildContext context, T option, bool isSelected)?
+      optionBuilder;
 
   String _optionLabel(T item) => optionLabelBuilder?.call(item) ?? '$item';
 
@@ -173,20 +241,21 @@ class _BottomSheetSelectContent<T> extends StatelessWidget {
                           width: 1.1,
                         ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            _optionLabel(option),
-                            style: theme.textTheme.bodyMedium!.copyWith(
-                              color: isSelected ? theme.primaryColor : null,
-                              fontWeight: isSelected
-                                  ? FontWeight.w700
-                                  : FontWeight.w500,
-                            ),
+                      child: optionBuilder?.call(context, option, isSelected) ??
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                _optionLabel(option),
+                                style: theme.textTheme.bodyMedium!.copyWith(
+                                  color: isSelected ? theme.primaryColor : null,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
                     ),
                   );
                 },

@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
+import '../../audio/quran_audio_catalog.dart';
+
 part 'quran_theme_event.dart';
 part 'quran_theme_state.dart';
 
@@ -95,6 +97,8 @@ class QuranThemeBloc extends HydratedBloc<QuranThemeEvent, QuranThemeState> {
         ));
       }
       if (event is SetAudioEdition) {
+        final matched = findQuranAudioById(event.edition);
+        final bitrate = matched?.quality ?? state.audioBitrate;
         emit(QuranThemeState(
           quranType: state.quranType,
           showTranslation: state.showTranslation,
@@ -105,7 +109,7 @@ class QuranThemeBloc extends HydratedBloc<QuranThemeEvent, QuranThemeState> {
           translationFontFamily: state.translationFontFamily,
           qcfScrollDirection: state.qcfScrollDirection,
           audioEdition: event.edition,
-          audioBitrate: state.audioBitrate,
+          audioBitrate: bitrate,
         ));
       }
       if (event is SetAudioBitrate) {

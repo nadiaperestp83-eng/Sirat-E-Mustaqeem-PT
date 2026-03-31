@@ -30,6 +30,11 @@ List<Collection> collections = [
     RouteGenerator.tasbih,
   ),
   Collection(
+    'assets/images/collection_icon/svg/other.svg',
+    'Azkars',
+    RouteGenerator.azkar,
+  ),
+  Collection(
     'assets/images/collection_icon/svg/allah.svg',
     '99 Names of Allah',
     RouteGenerator.allahName,

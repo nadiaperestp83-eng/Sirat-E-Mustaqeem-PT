@@ -14,6 +14,7 @@ import '../bloc/tab/tab_bloc.dart' as qtb;
 import '../cubit/quran_cubit.dart';
 import '../cubit/quran_reading_cubit.dart';
 import '../screen/selected_quran_screen.dart';
+import '../screen/quran_search_screen.dart';
 import 'juz_card.dart';
 import 'quran_tab.dart';
 import 'surah_card.dart';
@@ -71,9 +72,27 @@ class QuranScaffold extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              if (!BlocProvider.of<QuranCubit>(context).state.fromNav)
-                Navigator.of(context).pop();
-              BlocProvider.of<btb.TabBloc>(context).add(btb.SetTab(1));
+              final quranCubit = BlocProvider.of<QuranCubit>(context);
+              QuranReadingCubit? readingCubit;
+              try {
+                readingCubit = BlocProvider.of<QuranReadingCubit>(context);
+              } catch (_) {
+                readingCubit = null;
+              }
+
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => MultiBlocProvider(
+                    providers: [
+                      BlocProvider<QuranCubit>.value(value: quranCubit),
+                      if (readingCubit != null)
+                        BlocProvider<QuranReadingCubit>.value(
+                            value: readingCubit),
+                    ],
+                    child: const QuranSearchScreen(),
+                  ),
+                ),
+              );
             },
             child: Padding(
               padding: EdgeInsets.symmetric(

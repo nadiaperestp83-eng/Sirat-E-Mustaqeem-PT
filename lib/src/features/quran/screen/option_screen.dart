@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../core/util/constants.dart';
 import '../../utils/custom_switch.dart';
 import '../../utils/bottom_sheet_select.dart';
+import '../audio/quran_audio_catalog.dart';
 import '../bloc/quran_theme/quran_theme_bloc.dart';
 
 const List<String> _quranTypes = ['Normal', 'QCF'];
@@ -36,13 +37,7 @@ const List<String> _translationGoogleFonts = [
   'Lato',
   'Montserrat',
 ];
-const List<String> _audioEditions = [
-  'ar.alafasy',
-  'ar.abdurrahmaansudais',
-  'ar.husary',
-  'ar.minshawi',
-];
-const List<int> _audioBitrates = [192, 128, 64, 48, 40, 32];
+List<String> get _audioEditionIds => quranAudios.map((e) => e.id).toList();
 
 class OptionScreen extends StatelessWidget {
   const OptionScreen();
@@ -54,7 +49,6 @@ class OptionScreen extends StatelessWidget {
       const ShowTranslationOption(),
       const TranslationMode(),
       const AudioEditionOption(),
-      const AudioBitrateOption(),
       if (state.quranType != 'QCF') const QuranFontSize(),
       if (state.quranType != 'QCF') const QuranFontFamily(),
       const TranslationFontSize(),
@@ -105,42 +99,107 @@ class OptionScreen extends StatelessWidget {
 class AudioEditionOption extends StatelessWidget {
   const AudioEditionOption();
 
+  String _humanType(String type) {
+    switch (type.trim().toLowerCase()) {
+      case 'versebyverse':
+        return 'Verse by verse';
+      case 'translation':
+        return 'Translation';
+      default:
+        if (type.isEmpty) return '';
+        return type[0].toUpperCase() + type.substring(1);
+    }
+  }
+
+  String _humanLanguage(String language) {
+    switch (language.trim().toLowerCase()) {
+      case 'ar':
+        return 'Arabic';
+      case 'en':
+        return 'English';
+      case 'ur':
+        return 'Urdu';
+      case 'fa':
+        return 'Persian';
+      case 'fr':
+        return 'French';
+      case 'ru':
+        return 'Russian';
+      case 'zh':
+        return 'Chinese';
+      default:
+        return language.isEmpty ? '' : language.toUpperCase();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<QuranThemeBloc, QuranThemeState>(
       builder: (context, state) {
-        final value =
-            _audioEditions.contains(state.audioEdition) ? state.audioEdition : _audioEditions.first;
+        final ids = _audioEditionIds;
+        final fallbackId = ids.isNotEmpty ? ids.first : state.audioEdition;
+        final value = ids.contains(state.audioEdition) ? state.audioEdition : fallbackId;
+
+        QuranAudioOption? optionFor(String id) => findQuranAudioById(id);
+
+        String selectedLabel(String id) {
+          final a = optionFor(id);
+          if (a == null) return id;
+          return '${a.englishName} • ${a.quality} kbps';
+        }
+
+        Widget tileBuilder(BuildContext context, String id, bool isSelected) {
+          final theme = Theme.of(context);
+          final a = optionFor(id);
+          if (a == null) {
+            return Text(
+              id,
+              style: theme.textTheme.bodyMedium!.copyWith(
+                color: isSelected ? theme.primaryColor : null,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+              ),
+            );
+          }
+
+          final titleStyle = theme.textTheme.bodyMedium!.copyWith(
+            color: isSelected ? theme.primaryColor : null,
+            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+          );
+          final subtitleStyle = theme.textTheme.bodySmall!.copyWith(
+            color: (isSelected ? theme.primaryColor : theme.hintColor)
+                .withValues(alpha: 0.9),
+            fontWeight: FontWeight.w500,
+          );
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(a.englishName, style: titleStyle),
+              SizedBox(height: 4.h),
+              Text(
+                a.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: subtitleStyle,
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                'Type: ${_humanType(a.type)} • Language: ${_humanLanguage(a.language)} • Quality: ${a.quality} kbps',
+                style: subtitleStyle,
+              ),
+            ],
+          );
+        }
+
         return BottomSheetSelect<String>(
           label: 'Audio reciter',
           value: value,
-          options: _audioEditions,
+          options: ids,
+          selectedLabelBuilder: selectedLabel,
+          optionBuilder: tileBuilder,
           onChanged: (edition) {
             BlocProvider.of<QuranThemeBloc>(context).add(SetAudioEdition(edition));
-          },
-        );
-      },
-    );
-  }
-}
-
-class AudioBitrateOption extends StatelessWidget {
-  const AudioBitrateOption();
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<QuranThemeBloc, QuranThemeState>(
-      builder: (context, state) {
-        final value =
-            _audioBitrates.contains(state.audioBitrate) ? state.audioBitrate : _audioBitrates[1];
-        return BottomSheetSelect<int>(
-          label: 'Audio quality',
-          value: value,
-          options: _audioBitrates,
-          optionLabelBuilder: (v) => '${v}kbps',
-          onChanged: (bitrate) {
-            BlocProvider.of<QuranThemeBloc>(context)
-                .add(SetAudioBitrate(bitrate));
           },
         );
       },
