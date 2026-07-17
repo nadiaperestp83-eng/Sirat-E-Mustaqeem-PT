@@ -5,56 +5,63 @@ version: 1.0.0+1
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
+
 dependencies:
-  cached_network_image: ^3.1.0
-  cupertino_icons: ^1.0.2
-  dartz: ^0.10.0
-  dio: ^5.1.2
-  equatable: ^2.0.3
   flutter:
     sdk: flutter
-  flutter_bloc: ^9.1.1
-  flutter_local_notifications: ^20.1.0
   flutter_localizations:
     sdk: flutter
-  flutter_timezone: ^3.0.1
-  flutter_screenutil: ^5.0.0+2
-  flutter_staggered_grid_view: ^0.7.0
-  flutter_svg: ^2.0.5
-  geocoding: ^4.0.0
-  geolocator: ^14.0.2
-  google_fonts: ^8.0.2
-  hijri_calendar: ^1.0.7+7
-  hydrated_bloc: ^10.1.1
-  intl: ^0.20.2
-  lottie: ^3.3.2
-  sensors_plus: ^7.1.0
-  muslim_data_flutter: ^1.5.0
-  path_provider: ^2.0.2
-  permission_handler: ^12.0.1
-  qcf_quran: 0.0.5
-  quran: ^1.4.1
+  
+  # Core & Utils
+  dio: ^5.7.0
+  dartz: ^0.10.1
+  equatable: ^2.0.5
   rxdart: ^0.28.0
-  share_plus: ^12.0.1
-  shared_preferences: ^2.0.6
-  sqflite: ^2.0.0+3
-  url_launcher: ^6.0.9
-  just_audio: ^0.9.40
+  shared_preferences: ^2.3.2
+  sqflite: ^2.3.3
+  path_provider: ^2.1.4
+  url_launcher: ^6.3.1
   connectivity_plus: ^6.1.5
+  permission_handler: ^11.3.1
+  
+  # UI & Assets
+  cached_network_image: ^3.4.1
+  flutter_svg: ^2.0.16
+  flutter_screenutil: ^5.9.3
+  flutter_staggered_grid_view: ^0.7.1
+  google_fonts: ^6.2.1
+  lottie: ^3.1.2
+  cupertino_icons: ^1.0.8
+  
+  # State Management & Data
+  flutter_bloc: ^9.0.0
+  hydrated_bloc: ^9.1.2
+  
+  # Muslim & Calendar features
+  muslim_data_flutter: ^1.5.0
+  hijri_calendar: ^1.0.7+7
+  quran: ^1.4.1
+  qcf_quran: 0.0.5
+  intl: ^0.19.0
+  
+  # Media & Sensors
+  just_audio: ^0.9.41
   audio_session: ^0.1.25
-  video_player: ^2.10.0
+  video_player: ^2.9.1
+  geolocator: ^13.0.1
+  geocoding: ^3.0.0
+  sensors_plus: ^6.0.1
+  flutter_timezone: ^2.0.0
+  flutter_local_notifications: ^18.0.1
+  share_plus: ^10.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-dependency_overrides:
-  path_provider_foundation: 2.5.1
-
 flutter:
   generate: true
   uses-material-design: true
-  # To add assets to your application, add an assets section, like this:
   assets:
     - assets/latest.db
     - assets/images/core/json/
@@ -67,7 +74,6 @@ flutter:
     - assets/images/qiblat_icon/svg/
     - assets/images/praying_time/svg/
     - assets/images/setting_icon/svg/
-    - assets/images/error/lottie_json/
     - assets/images/permission/lottie_json/
     - assets/images/tasbih_icon/svg/
     - assets/images/dua_icon/svg/
@@ -84,7 +90,6 @@ flutter:
     - family: Jameel
       fonts:
         - asset: assets/fonts/jameel.ttf
-
     - family: "arsura"
       fonts:
         - asset: assets/fonts/arsura.ttf
