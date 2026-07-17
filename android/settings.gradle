@@ -23,4 +23,6 @@ plugins {
 }
 
 include ':app'
-include_flutter_plugins(settings)
+
+// Esta é a forma correta de carregar os plugins no Gradle moderno
+apply from: "$flutterSdkPath/packages/flutter_tools/gradle/app_plugin_loader.gradle"
