@@ -1,0 +1,30 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Sirat-E-Mustaqeem",
+
+  "settings": "Settings",
+  "language": "Language",
+  "languageEnglish": "English",
+  "languagePortuguese": "Português",
+  "languageSubtitle": "Choose the app language",
+
+  "quran": "Quran",
+  "hadith": "Hadith",
+  "prayerTimes": "Prayer Times",
+  "qibla": "Qibla",
+  "azkar": "Azkar",
+  "home": "Home",
+
+  "save": "Save",
+  "cancel": "Cancel",
+  "ok": "OK",
+  "close": "Close",
+
+  "quranTranslationSource": "Translation source: {source}",
+  "@quranTranslationSource": {
+    "placeholders": {
+      "source": { "type": "String" }
+    }
+  }
+}
