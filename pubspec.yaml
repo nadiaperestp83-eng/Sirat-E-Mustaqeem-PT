@@ -42,6 +42,13 @@ dependencies:
   connectivity_plus: ^6.1.5
   audio_session: ^0.1.25
   video_player: ^2.10.0
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.19.0
+  shared_preferences: ^2.2.3   # se já existir no seu pubspec.yaml (o ThemeBloc provavelmente já usa), NÃO duplique — apenas confira a versão
+
+flutter:
+  generate: true   # habilita a geração automática do AppLocalizations no build (funciona liso no GitHub Actions, sem precisar de terminal)
 
 dev_dependencies:
   flutter_test:
