@@ -10,9 +10,9 @@ import '../../../core/util/bloc/time_format/time_format_bloc.dart';
 import '../../utils/sirat_card.dart';
 import '../controller/setting_controller.dart';
 import 'change_format_switch.dart';
-import 'change_language_dropdown.dart';
 import 'change_notification_switch.dart';
 import 'change_theme_switch.dart';
+import 'language_selector_tile.dart';
 
 class UserPreferenceCard extends StatelessWidget {
   const UserPreferenceCard();
@@ -27,7 +27,7 @@ class UserPreferenceCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'User Preferences',
+            l10n.userPreferences,
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -39,7 +39,7 @@ class UserPreferenceCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Theme',
+                l10n.theme,
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium!
@@ -59,25 +59,15 @@ class UserPreferenceCard extends StatelessWidget {
             ],
           ),
           Divider(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                l10n.language,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .copyWith(color: Theme.of(context).primaryColor),
-              ),
-              const ChangeLanguageDropdown(),
-            ],
-          ),
+          // Seletor de idioma: ListTile que abre um ModalBottomSheet.
+          // O próprio widget já ocupa a linha inteira (título + valor atual).
+          const LanguageSelectorTile(),
           Divider(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Time Format',
+                l10n.timeFormat,
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium!
@@ -101,7 +91,7 @@ class UserPreferenceCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Notification',
+                l10n.notification,
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium!
