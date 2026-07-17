@@ -33,6 +33,12 @@ jobs:
       - name: Generate localizations (AppLocalizations)
         run: flutter gen-l10n
 
+      # PASSO ADICIONADO PARA RESOLVER O ERRO DO keys.dart
+      - name: Create mock keys.dart
+        run: |
+          mkdir -p lib/src/core/
+          echo "const String kGoogleCloudApiKey = 'API_KEY_FICTICIA_PARA_BUILD';" > lib/src/core/keys.dart
+
       - name: Analyze project (non-blocking)
         run: flutter analyze --no-fatal-infos --no-fatal-warnings
         continue-on-error: true
