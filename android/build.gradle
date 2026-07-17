@@ -13,28 +13,6 @@ subprojects {
     project.evaluationDependsOn(":app")
 }
 
-// Correção para plugins Android antigos e abandonados (ex: flutter_native_timezone)
-// que nunca foram atualizados para declarar "namespace", exigência do AGP 8+.
-// Lê o "package" do AndroidManifest.xml de cada plugin e injeta como namespace
-// automaticamente, sem precisar tocar no código-fonte do pacote.
-subprojects {
-    afterEvaluate { project ->
-        if (project.plugins.hasPlugin("com.android.library")) {
-            def androidExtension = project.extensions.findByName("android")
-            if (androidExtension != null && androidExtension.namespace == null) {
-                def manifestFile = project.file("src/main/AndroidManifest.xml")
-                if (manifestFile.exists()) {
-                    def manifestText = manifestFile.text
-                    def matcher = (manifestText =~ /package="([^"]+)"/)
-                    if (matcher.find()) {
-                        androidExtension.namespace = matcher.group(1)
-                    }
-                }
-            }
-        }
-    }
-}
-
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
