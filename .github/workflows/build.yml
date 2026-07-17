@@ -38,7 +38,9 @@ jobs:
         continue-on-error: true
 
       - name: Build APK (release, assinado com a debug key)
-        run: flutter build apk --release
+        run: |
+          flutter build apk --release \
+            --android-skip-build-dependency-validation
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
