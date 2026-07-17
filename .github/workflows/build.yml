@@ -30,23 +30,18 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Generate localizations (AppLocalizations)
+      - name: Generate localizations
         run: flutter gen-l10n
 
-      # PASSO ADICIONADO PARA RESOLVER O ERRO DO keys.dart
+      # Criação do arquivo de chaves para evitar erros de compilação
       - name: Create mock keys.dart
         run: |
           mkdir -p lib/src/core/
           echo "const String kGoogleCloudApiKey = 'API_KEY_FICTICIA_PARA_BUILD';" > lib/src/core/keys.dart
 
-      - name: Analyze project (non-blocking)
-        run: flutter analyze --no-fatal-infos --no-fatal-warnings
-        continue-on-error: true
-
-      - name: Build APK (release, assinado com a debug key)
+      - name: Build APK
         run: |
-          flutter build apk --release \
-            --android-skip-build-dependency-validation
+          flutter build apk --release --android-skip-build-dependency-validation
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
