@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
-import 'package:motion_sensors/motion_sensors.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 
 import '../blocs/angle_bloc/angle_bloc.dart';
 import '../controller/qibla_controller.dart';
@@ -24,20 +24,21 @@ class _CompassState extends State<Compass> {
 
   @override
   void initState() {
-    motionSensors.magnetometerUpdateInterval =
-        Duration.microsecondsPerSecond ~/ 60;
-    getMagnetometerAvailability().then((isSensorAvailable) {
-      if (isSensorAvailable)
-        _streamSubscription =
-            motionSensors.magnetometer.listen((MagnetometerEvent event) {
-          updateEvent(event, context);
-        });
-      else {
+    _streamSubscription = magnetometerEventStream(
+      samplingPeriod: Duration(
+        microseconds: Duration.microsecondsPerSecond ~/ 60,
+      ),
+    ).listen(
+      (MagnetometerEvent event) {
+        updateEvent(event, context);
+      },
+      onError: (_) {
         BlocProvider.of<AngleBloc>(context).add(
           NotifyFailure(),
         );
-      }
-    });
+      },
+      cancelOnError: true,
+    );
 
     super.initState();
   }
