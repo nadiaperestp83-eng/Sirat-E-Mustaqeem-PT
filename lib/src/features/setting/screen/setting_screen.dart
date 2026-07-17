@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../../core/util/constants.dart';
 import '../widget/general_card.dart';
 import '../widget/social_media_card.dart';
@@ -12,6 +13,8 @@ class SettingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return SafeArea(
       top: false,
       child: SingleChildScrollView(
@@ -49,11 +52,11 @@ class SettingScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Settings',
+                            l10n.settings,
                             style: Theme.of(context).textTheme.displaySmall,
                           ),
                           Text(
-                            'Configure your experience',
+                            l10n.settingsSubtitle,
                             style: Theme.of(context).textTheme.bodyLarge,
                           ),
                         ],
