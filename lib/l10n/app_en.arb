@@ -4,10 +4,17 @@
   "appTitle": "Sirat-E-Mustaqeem",
 
   "settings": "Settings",
+  "settingsSubtitle": "Configure your experience",
   "language": "Language",
   "languageEnglish": "English",
   "languagePortuguese": "Português",
   "languageSubtitle": "Choose the app language",
+
+  "general": "General",
+  "userPreferences": "User Preferences",
+  "theme": "Theme",
+  "timeFormat": "Time Format",
+  "notification": "Notification",
 
   "quran": "Quran",
   "hadith": "Hadith",
