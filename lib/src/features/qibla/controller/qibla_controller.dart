@@ -18,7 +18,7 @@ import 'dart:math' show sin, cos, atan2, pi;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:motion_sensors/motion_sensors.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 import 'package:vector_math/vector_math.dart' show radians;
 
 import '../blocs/angle_bloc/angle_bloc.dart';
