@@ -1,0 +1,25 @@
+{
+  "@@locale": "pt",
+
+  "appTitle": "Sirat-E-Mustaqeem",
+
+  "settings": "Configurações",
+  "language": "Idioma",
+  "languageEnglish": "English",
+  "languagePortuguese": "Português",
+  "languageSubtitle": "Escolha o idioma do aplicativo",
+
+  "quran": "Alcorão",
+  "hadith": "Hadith",
+  "prayerTimes": "Horários de Oração",
+  "qibla": "Qibla",
+  "azkar": "Azkar",
+  "home": "Início",
+
+  "save": "Salvar",
+  "cancel": "Cancelar",
+  "ok": "OK",
+  "close": "Fechar",
+
+  "quranTranslationSource": "Fonte da tradução: {source}"
+}
