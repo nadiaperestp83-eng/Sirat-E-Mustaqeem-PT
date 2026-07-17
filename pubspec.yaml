@@ -16,6 +16,8 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^9.1.1
   flutter_local_notifications: ^20.1.0
+  flutter_localizations:
+    sdk: flutter
   flutter_native_timezone: ^2.0.0
   flutter_screenutil: ^5.0.0+2
   flutter_staggered_grid_view: ^0.7.0
@@ -42,13 +44,6 @@ dependencies:
   connectivity_plus: ^6.1.5
   audio_session: ^0.1.25
   video_player: ^2.10.0
-  flutter_localizations:
-    sdk: flutter
-  intl: ^0.19.0
-  shared_preferences: ^2.2.3   # se já existir no seu pubspec.yaml (o ThemeBloc provavelmente já usa), NÃO duplique — apenas confira a versão
-
-flutter:
-  generate: true   # habilita a geração automática do AppLocalizations no build (funciona liso no GitHub Actions, sem precisar de terminal)
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +53,7 @@ dependency_overrides:
   path_provider_foundation: 2.5.1
 
 flutter:
+  generate: true
   uses-material-design: true
   # To add assets to your application, add an assets section, like this:
   assets:
