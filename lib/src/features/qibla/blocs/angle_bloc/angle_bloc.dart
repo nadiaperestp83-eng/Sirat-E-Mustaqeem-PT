@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:motion_sensors/motion_sensors.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 import 'package:vector_math/vector_math.dart' show radians;
 
 import '../../controller/qibla_controller.dart';
