@@ -1,19 +1,51 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'
-    show Theme, Colors, BorderRadius, BoxDecoration, Divider, LinearGradient;
+    show
+        Theme,
+        Colors,
+        BorderRadius,
+        BoxDecoration,
+        Divider,
+        LinearGradient,
+        Localizations;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quran/quran.dart' as quran;
 import 'package:quran/quran.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../utils/sirat_card.dart';
 
 class AyatCard extends StatelessWidget {
   AyatCard({super.key});
   final RandomVerse randomVerse = RandomVerse();
 
+  /// A tradução embutida no pacote `quran` (randomVerse.translation) vem
+  /// sempre em inglês. Como o app já usa `quran.Translation.portuguese`
+  /// (Samir El Hayek) na leitura principal do Alcorão, buscamos a mesma
+  /// tradução aqui quando o idioma atual do app for português.
+  String _translationFor(BuildContext context) {
+    final isPortuguese =
+        Localizations.localeOf(context).languageCode == 'pt';
+
+    if (!isPortuguese) {
+      return randomVerse.translation;
+    }
+
+    try {
+      return quran.getVerseTranslation(
+        randomVerse.surahNumber,
+        randomVerse.verseNumber,
+        translation: quran.Translation.portuguese,
+      );
+    } catch (_) {
+      return randomVerse.translation;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = Theme.of(context).colorScheme.primary;
 
@@ -39,7 +71,7 @@ class AyatCard extends StatelessWidget {
               ),
               SizedBox(width: 12.w),
               Text(
-                'Quran Ayat of the Day',
+                l10n.quranAyatOfTheDay,
                 style: TextStyle(
                   fontSize: 17.sp,
                   fontWeight: FontWeight.w600,
@@ -85,7 +117,7 @@ class AyatCard extends StatelessWidget {
                 ),
                 SizedBox(height: 12.h),
                 Text(
-                  randomVerse.translation,
+                  _translationFor(context),
                   style: TextStyle(
                     fontSize: 14.sp,
                     height: 1.5,
@@ -95,7 +127,10 @@ class AyatCard extends StatelessWidget {
                 ),
                 SizedBox(height: 12.h),
                 Text(
-                  'Surah ${quran.getSurahName(randomVerse.surahNumber)} - Ayah ${randomVerse.verseNumber}',
+                  l10n.surahAyahLabel(
+                    quran.getSurahName(randomVerse.surahNumber),
+                    randomVerse.verseNumber,
+                  ),
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontStyle: FontStyle.italic,
