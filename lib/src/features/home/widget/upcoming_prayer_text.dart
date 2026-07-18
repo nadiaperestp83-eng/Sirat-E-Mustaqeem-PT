@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../../core/util/bloc/prayer_timing_bloc/timing_bloc.dart';
 import '../../../core/util/model/timing.dart';
 
@@ -46,19 +47,20 @@ class _UpcomingPrayerTextState extends State<UpcomingPrayerText> {
     return DateTime(now.year, now.month, now.day, h, m);
   }
 
-  static String _formatDuration(Duration d) {
-    if (d.isNegative) return '0 minutes';
-    if (d.inMinutes < 1) return 'less than a minute';
+  /// Formata a duração restante usando os textos localizados
+  /// (singular/plural de minuto(s) e hora(s) tratados via ICU plural no ARB).
+  static String _formatDuration(AppLocalizations l10n, Duration d) {
+    if (d.isNegative) return l10n.durationZeroMinutes;
+    if (d.inMinutes < 1) return l10n.durationLessThanMinute;
     if (d.inMinutes < 60) {
-      final mins = d.inMinutes;
-      return '$mins ${mins == 1 ? 'minute' : 'minutes'}';
+      return l10n.minutesCount(d.inMinutes);
     }
     final h = d.inHours;
     final mins = d.inMinutes.remainder(60);
     if (mins == 0) {
-      return '$h ${h == 1 ? 'hour' : 'hours'}';
+      return l10n.hoursCount(h);
     }
-    return '$h ${h == 1 ? 'hour' : 'hours'} $mins ${mins == 1 ? 'minute' : 'minutes'}';
+    return '${l10n.hoursCount(h)} ${l10n.minutesCount(mins)}';
   }
 
   static _NextPrayerInfo? _nextPrayer(Timings t) {
@@ -90,6 +92,8 @@ class _UpcomingPrayerTextState extends State<UpcomingPrayerText> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return BlocBuilder<TimingBloc, TimingState>(
       builder: (context, state) {
         if (state is! TimingLoaded) {
@@ -100,31 +104,43 @@ class _UpcomingPrayerTextState extends State<UpcomingPrayerText> {
           return const SizedBox.shrink();
         }
 
-        final durationStr = _formatDuration(next.remaining);
+        final durationStr = _formatDuration(l10n, next.remaining);
         final baseStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: Colors.white,
               fontSize: 14.sp,
               height: 1.25,
             );
 
+        // O nome da oração (Fajr, Dhuhr, Asr...) é um termo islâmico
+        // universal e não é traduzido; apenas o texto ao redor dele.
+        // O destaque em dourado (como no design original) fica na duração.
+        final fullText = l10n.nextPrayerIn(next.name, durationStr);
+        final durationStart = fullText.indexOf(durationStr);
+
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Text.rich(
-            TextSpan(
-              style: baseStyle,
-              children: [
-                TextSpan(text: '${next.name} is only away from '),
-                TextSpan(
-                  text: durationStr,
-                  style: baseStyle?.copyWith(
-                    color: _gold,
-                    fontWeight: FontWeight.w700,
+          child: durationStart < 0
+              ? Text(fullText, style: baseStyle, textAlign: TextAlign.center)
+              : Text.rich(
+                  TextSpan(
+                    style: baseStyle,
+                    children: [
+                      TextSpan(text: fullText.substring(0, durationStart)),
+                      TextSpan(
+                        text: durationStr,
+                        style: baseStyle?.copyWith(
+                          color: _gold,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      TextSpan(
+                        text: fullText
+                            .substring(durationStart + durationStr.length),
+                      ),
+                    ],
                   ),
+                  textAlign: TextAlign.center,
                 ),
-              ],
-            ),
-            textAlign: TextAlign.center,
-          ),
         );
       },
     );
