@@ -23,6 +23,35 @@
   "azkar": "Azkar",
   "home": "Início",
 
+  "navSearch": "Buscar",
+  "navBookmark": "Favoritos",
+
+  "collectionTitle": "Coleção",
+  "collectionDua": "Dua",
+  "collectionTasbih": "Tasbih",
+  "collectionAllahNames": "99 Nomes de Allah",
+  "collectionQiblaDirection": "Direção da Qibla",
+  "collectionLiveTv": "TV ao Vivo",
+  "collectionOthers": "Outros",
+
+  "quranAyatOfTheDay": "Versículo do Alcorão do Dia",
+  "surahAyahLabel": "Surata {surah} - Versículo {ayah}",
+
+  "hadeesOfTheDay": "Hadith do Dia",
+  "hadeesQuoteText": "Um muçulmano é irmão de outro muçulmano: não deve oprimi-lo, nem entregá-lo a quem o oprima. Quem atender às necessidades de seu irmão, Allah atenderá às suas necessidades; quem livrar um muçulmano de uma dificuldade, Allah o livrará de uma das dificuldades do Dia da Ressurreição; e quem encobrir as faltas de um muçulmano, Allah encobrirá as suas no Dia da Ressurreição.",
+  "hadeesAttribution": "- Profeta Muhammad (que a paz esteja com ele)",
+  "hadeesReference": "Bukhari, Mazalim (Injustiças), 3",
+
+  "locationLabel": "Localização",
+  "locationDescription": "Os horários de oração usam sua localização salva. Para alterá-la, atualize a permissão e a precisão de localização nas configurações do seu dispositivo.",
+  "locationUnavailable": "Localização indisponível",
+
+  "nextPrayerIn": "Faltam {duration} para o {prayer}",
+  "durationLessThanMinute": "menos de um minuto",
+  "durationZeroMinutes": "0 minutos",
+  "minutesCount": "{count, plural, one{1 minuto} other{{count} minutos}}",
+  "hoursCount": "{count, plural, one{1 hora} other{{count} horas}}",
+
   "save": "Salvar",
   "cancel": "Cancelar",
   "ok": "OK",
