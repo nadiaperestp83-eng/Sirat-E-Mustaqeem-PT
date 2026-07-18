@@ -35,6 +35,18 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // O usuário pode ter concedido a permissão de localização fora do
+      // fluxo do app (ex: pelas Configurações do sistema) enquanto o app
+      // estava em background. Sem isso, o LocationBloc ficaria travado
+      // no último estado de falha até o app ser reiniciado do zero.
+      final locationState = BlocProvider.of<LocationBloc>(context).state;
+      if (locationState is! LocationSuccess &&
+          locationState is! LocationLoading) {
+        BlocProvider.of<LocationBloc>(context).add(InitLocation());
+      }
+    }
+
     if (Platform.isAndroid)
       Future.delayed(Duration(milliseconds: 500), () {
         if (state == AppLifecycleState.resumed) {
