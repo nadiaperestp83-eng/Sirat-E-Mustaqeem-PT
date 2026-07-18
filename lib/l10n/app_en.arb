@@ -74,6 +74,17 @@
     }
   },
 
+  "nextPrayerCardTitle": "Next Prayer",
+  "nextPrayerCountdown": "{prayer} in {duration}",
+  "@nextPrayerCountdown": {
+    "placeholders": {
+      "prayer": { "type": "String" },
+      "duration": { "type": "String" }
+    }
+  },
+  "nextPrayerUnavailable": "Unable to load prayer times. Check your location permission and connection.",
+  "retry": "Try Again",
+
   "save": "Save",
   "cancel": "Cancel",
   "ok": "OK",
