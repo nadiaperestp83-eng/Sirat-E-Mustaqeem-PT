@@ -63,7 +63,7 @@ class NotificationService {
     /// [onSelectNotification] handler for clicking notification while in
     /// app ios<10+
     await flutterLocalNotificationsPlugin.initialize(
-      settings: initializationSettings,
+      initializationSettings,
       // onDidReceiveBackgroundNotificationResponse: _onSelectNotification,
     );
 
@@ -142,17 +142,15 @@ class NotificationService {
 
     /// scheduled notification function
     await flutterLocalNotificationsPlugin.zonedSchedule(
-        id: id,
-        title: title,
-        body: body,
-      scheduledDate:   tz.TZDateTime.now(tz.local).add(duration),
-        notificationDetails: platformChannelSpecifics,
-        // uiLocalNotificationDateInterpretation:
-        //     UILocalNotificationDateInterpretation.absoluteTime,
-        // androidAllowWhileIdle: true,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        matchDateTimeComponents: DateTimeComponents.time,
-        payload: '');
+      id,
+      title,
+      body,
+      tz.TZDateTime.now(tz.local).add(duration),
+      platformChannelSpecifics,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
+      payload: '',
+    );
   }
 
   Future<void> checkNotification() async {
