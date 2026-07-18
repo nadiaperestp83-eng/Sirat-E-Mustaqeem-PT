@@ -52,6 +52,11 @@
   "minutesCount": "{count, plural, one{1 minuto} other{{count} minutos}}",
   "hoursCount": "{count, plural, one{1 hora} other{{count} horas}}",
 
+  "nextPrayerCardTitle": "Próxima Oração",
+  "nextPrayerCountdown": "{prayer} em {duration}",
+  "nextPrayerUnavailable": "Não foi possível carregar os horários de oração. Verifique a permissão de localização e a conexão.",
+  "retry": "Tentar Novamente",
+
   "save": "Salvar",
   "cancel": "Cancelar",
   "ok": "OK",
