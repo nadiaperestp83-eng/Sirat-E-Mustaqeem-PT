@@ -61,8 +61,10 @@ class AppBarExpanded extends StatelessWidget {
                 const AddressWidget(),
                 BlocBuilder<PrayerTimeConfigBloc, PrayerTimeConfigState>(
                   builder: (context, prayerConfig) {
+                    final localeName = Localizations.localeOf(context)
+                        .languageCode;
                     return Text(
-                      '${getIslamicDate(adjustmentDays: prayerConfig.hijriAdjustmentDays)} - ${getTodayDate()}',
+                      '${getIslamicDate(adjustmentDays: prayerConfig.hijriAdjustmentDays)} - ${getTodayDate(localeName: localeName)}',
                       style: Theme.of(context).textTheme.titleLarge!.copyWith(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -71,13 +73,20 @@ class AppBarExpanded extends StatelessWidget {
                     );
                   },
                 ),
-                Text(
-                  DateFormat('hh:mm a').format(DateTime.now()),
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 28.sp,
-                      ),
+                Builder(
+                  builder: (context) {
+                    final localeName =
+                        Localizations.localeOf(context).languageCode;
+                    return Text(
+                      DateFormat('hh:mm a', localeName)
+                          .format(DateTime.now()),
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 28.sp,
+                          ),
+                    );
+                  },
                 ),
                 SizedBox(height: 6.h),
                 const UpcomingPrayerText(),
