@@ -3,6 +3,7 @@ import 'package:flutter/material.dart'
     show Theme, Colors, BorderRadius, BoxDecoration, Divider, LinearGradient;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../utils/sirat_card.dart';
 
 class HadessCard extends StatelessWidget {
@@ -10,6 +11,7 @@ class HadessCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = Theme.of(context).colorScheme.primary;
 
@@ -35,7 +37,7 @@ class HadessCard extends StatelessWidget {
               ),
               SizedBox(width: 12.w),
               Text(
-                'Hadees of the Day',
+                l10n.hadeesOfTheDay,
                 style: TextStyle(
                   fontSize: 17.sp,
                   fontWeight: FontWeight.w600,
@@ -71,11 +73,7 @@ class HadessCard extends StatelessWidget {
                 ),
                 SizedBox(height: 12.h),
                 Text(
-                  '"A Muslim is a brother of another Muslim, so he should not oppress him, nor should he '
-                  'hand him over to an oppressor. Whoever has fulfilled the needs of his brother, Allah will '
-                  'fulfil his needs; whoever has brought his (Muslim) brother out of a discomfort, Allah will bring '
-                  'him out of the discomforts of the Day of Resurrection, and whoever has screened a Muslim, Allah will '
-                  'screen him(of his faults) on the Day of Resurrection."',
+                  '"${l10n.hadeesQuoteText}"',
                   style: TextStyle(
                     fontSize: 14.sp,
                     height: 1.6,
@@ -91,7 +89,7 @@ class HadessCard extends StatelessWidget {
                 ),
                 SizedBox(height: 12.h),
                 Text(
-                  '- Prophet Muhammad (PBUH)',
+                  l10n.hadeesAttribution,
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
@@ -100,7 +98,7 @@ class HadessCard extends StatelessWidget {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  'Bukhari, Mazalim (Injustices), 3',
+                  l10n.hadeesReference,
                   style: TextStyle(
                     fontSize: 12.sp,
                     color: isDark ? Colors.white54 : Colors.black45,
