@@ -36,7 +36,9 @@ class SuccessWidget extends StatelessWidget {
               Padding(
                 padding: kPagePadding,
                 child: Text(
-                  getTodayDate(),
+                  getTodayDate(
+                    localeName: Localizations.localeOf(context).languageCode,
+                  ),
                   style: GoogleFonts.caveat(
                     textStyle:
                         Theme.of(context).textTheme.displaySmall!.copyWith(
