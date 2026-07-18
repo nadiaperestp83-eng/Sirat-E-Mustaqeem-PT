@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../bloc/tab/tab_bloc.dart';
 
 class SiratNavigationBar extends StatelessWidget {
@@ -10,6 +11,8 @@ class SiratNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return BlocBuilder<TabBloc, TabState>(
       builder: (context, state) {
         return BottomNavigationBar(
@@ -31,7 +34,7 @@ class SiratNavigationBar extends StatelessWidget {
                     .unselectedItemColor,
                 width: 24.sp,
               ),
-              label: 'Home',
+              label: l10n.home,
               activeIcon: SvgPicture.asset(
                 'assets/images/navigation_icon/svg/home_nfill.svg',
                 color: Theme.of(context)
@@ -48,7 +51,7 @@ class SiratNavigationBar extends StatelessWidget {
                     .unselectedItemColor,
                 width: 24.sp,
               ),
-              label: 'Search',
+              label: l10n.navSearch,
               activeIcon: SvgPicture.asset(
                 'assets/images/navigation_icon/svg/search.svg',
                 color: Theme.of(context)
@@ -65,7 +68,7 @@ class SiratNavigationBar extends StatelessWidget {
                     .bottomNavigationBarTheme
                     .unselectedItemColor,
               ),
-              label: 'Quran',
+              label: l10n.quran,
               activeIcon: SvgPicture.asset(
                 'assets/images/navigation_icon/svg/quran_nfill.svg',
                 color: Theme.of(context)
@@ -82,7 +85,7 @@ class SiratNavigationBar extends StatelessWidget {
                     .unselectedItemColor,
                 width: 24.sp,
               ),
-              label: 'Bookmark',
+              label: l10n.navBookmark,
               activeIcon: SvgPicture.asset(
                 'assets/images/navigation_icon/svg/bookmark_nfill.svg',
                 color: Theme.of(context)
@@ -99,7 +102,7 @@ class SiratNavigationBar extends StatelessWidget {
                     .unselectedItemColor,
                 width: 24.sp,
               ),
-              label: 'Setting',
+              label: l10n.settings,
               activeIcon: SvgPicture.asset(
                 'assets/images/navigation_icon/svg/setting_nfill.svg',
                 color: Theme.of(context)
