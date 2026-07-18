@@ -4,8 +4,36 @@ import 'package:flutter/material.dart'
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../utils/coming_soon_dialog.dart';
 import '../model/collection.dart';
+
+/// Resolve a chave de título (CollectionTitleKey) para o texto localizado
+/// correspondente, usando o AppLocalizations do idioma atual.
+String collectionTitleText(AppLocalizations l10n, CollectionTitleKey key) {
+  switch (key) {
+    case CollectionTitleKey.quran:
+      return l10n.quran;
+    case CollectionTitleKey.hadees:
+      return l10n.hadith;
+    case CollectionTitleKey.dua:
+      return l10n.collectionDua;
+    case CollectionTitleKey.tasbih:
+      return l10n.collectionTasbih;
+    case CollectionTitleKey.azkars:
+      return l10n.azkar;
+    case CollectionTitleKey.allahNames:
+      return l10n.collectionAllahNames;
+    case CollectionTitleKey.prayerTimes:
+      return l10n.prayerTimes;
+    case CollectionTitleKey.qiblaDirection:
+      return l10n.collectionQiblaDirection;
+    case CollectionTitleKey.liveTv:
+      return l10n.collectionLiveTv;
+    case CollectionTitleKey.others:
+      return l10n.collectionOthers;
+  }
+}
 
 class CollectionButton extends StatelessWidget {
   const CollectionButton(this.collection, {super.key});
@@ -14,6 +42,7 @@ class CollectionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = Theme.of(context).colorScheme.primary;
     return GestureDetector(
@@ -42,15 +71,10 @@ class CollectionButton extends StatelessWidget {
             SvgPicture.asset(
               collection.assetName,
               width: 64.w,
-              // height: 32.w,
-              // colorFilter: ColorFilter.mode(
-              //   primaryColor,
-              //   BlendMode.srcIn,
-              // ),
             ),
             SizedBox(height: 6.h),
             Text(
-              collection.title,
+              collectionTitleText(l10n, collection.titleKey),
               style: TextStyle(
                 fontSize: 11.sp,
                 fontWeight: FontWeight.w500,
