@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../../core/util/bloc/location/location_bloc.dart';
 import '../../../core/util/constants.dart';
 import '../../../core/util/location_display.dart';
@@ -10,6 +11,8 @@ class AddressWidget extends StatelessWidget {
   const AddressWidget({super.key});
 
   void _onTap(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     showModalBottomSheet<void>(
       context: context,
       shape: RoundedRectangleBorder(
@@ -23,15 +26,14 @@ class AddressWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Location',
+              l10n.locationLabel,
               style: Theme.of(ctx).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
             SizedBox(height: 12.h),
             Text(
-              'Prayer times use your saved location. To change it, update '
-              'location permission and accuracy in your device settings.',
+              l10n.locationDescription,
               style: Theme.of(ctx).textTheme.bodyMedium,
             ),
             SizedBox(height: 20.h),
@@ -39,7 +41,7 @@ class AddressWidget extends StatelessWidget {
               width: double.infinity,
               child: FilledButton(
                 onPressed: () => Navigator.pop(ctx),
-                child: const Text('OK'),
+                child: Text(l10n.ok),
               ),
             ),
           ],
@@ -50,6 +52,8 @@ class AddressWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return BlocBuilder<LocationBloc, LocationState>(
       builder: (context, state) {
         if (state is! LocationSuccess) {
@@ -57,7 +61,7 @@ class AddressWidget extends StatelessWidget {
         }
 
         final line = cityCountryFromPlacemark(state.placemark);
-        final label = line.isNotEmpty ? line : 'Location unavailable';
+        final label = line.isNotEmpty ? line : l10n.locationUnavailable;
 
         final textMaxWidth = (1.sw - 32.w - 72.w).clamp(80.w, 1.sw);
 
