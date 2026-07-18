@@ -63,7 +63,7 @@ class NotificationService {
     /// [onSelectNotification] handler for clicking notification while in
     /// app ios<10+
     await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
+      settings: initializationSettings,
       // onDidReceiveBackgroundNotificationResponse: _onSelectNotification,
     );
 
@@ -142,11 +142,11 @@ class NotificationService {
 
     /// scheduled notification function
     await flutterLocalNotificationsPlugin.zonedSchedule(
-      id,
-      title,
-      body,
-      tz.TZDateTime.now(tz.local).add(duration),
-      platformChannelSpecifics,
+      id: id,
+      title: title,
+      body: body,
+      scheduledDate: tz.TZDateTime.now(tz.local).add(duration),
+      notificationDetails: platformChannelSpecifics,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
       payload: '',
