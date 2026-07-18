@@ -23,6 +23,57 @@
   "azkar": "Azkar",
   "home": "Home",
 
+  "navSearch": "Search",
+  "navBookmark": "Bookmark",
+
+  "collectionTitle": "Collection",
+  "collectionDua": "Dua",
+  "collectionTasbih": "Tasbih",
+  "collectionAllahNames": "99 Names of Allah",
+  "collectionQiblaDirection": "Qibla Direction",
+  "collectionLiveTv": "Live TV",
+  "collectionOthers": "Others",
+
+  "quranAyatOfTheDay": "Quran Ayat of the Day",
+  "surahAyahLabel": "Surah {surah} - Ayah {ayah}",
+  "@surahAyahLabel": {
+    "placeholders": {
+      "surah": { "type": "String" },
+      "ayah": { "type": "int" }
+    }
+  },
+
+  "hadeesOfTheDay": "Hadith of the Day",
+  "hadeesQuoteText": "A Muslim is a brother of another Muslim, so he should not oppress him, nor should he hand him over to an oppressor. Whoever has fulfilled the needs of his brother, Allah will fulfil his needs; whoever has brought his (Muslim) brother out of a discomfort, Allah will bring him out of the discomforts of the Day of Resurrection, and whoever has screened a Muslim, Allah will screen him (of his faults) on the Day of Resurrection.",
+  "hadeesAttribution": "- Prophet Muhammad (PBUH)",
+  "hadeesReference": "Bukhari, Mazalim (Injustices), 3",
+
+  "locationLabel": "Location",
+  "locationDescription": "Prayer times use your saved location. To change it, update location permission and accuracy in your device settings.",
+  "locationUnavailable": "Location unavailable",
+
+  "nextPrayerIn": "{prayer} is only away from {duration}",
+  "@nextPrayerIn": {
+    "placeholders": {
+      "prayer": { "type": "String" },
+      "duration": { "type": "String" }
+    }
+  },
+  "durationLessThanMinute": "less than a minute",
+  "durationZeroMinutes": "0 minutes",
+  "minutesCount": "{count, plural, one{1 minute} other{{count} minutes}}",
+  "@minutesCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "hoursCount": "{count, plural, one{1 hour} other{{count} hours}}",
+  "@hoursCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
   "save": "Save",
   "cancel": "Cancel",
   "ok": "OK",
