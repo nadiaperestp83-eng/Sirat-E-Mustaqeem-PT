@@ -58,33 +58,50 @@ class _TabScaffoldState extends State<TabScaffold> {
   }
 
   @override
-  void didChangeDependencies() {
+  void initState() {
+    super.initState();
+    // Dispara a primeira busca de horários assim que a tela monta,
+    // usando o estado de localização que já existir naquele momento.
+    _requestTiming(context, BlocProvider.of<LocationBloc>(context).state);
+  }
+
+  /// Centraliza o disparo de RequestTiming para o TimingBloc, usado tanto
+  /// no primeiro carregamento (initState) quanto sempre que o
+  /// LocationBloc finalmente conseguir uma localização válida
+  /// (BlocListener abaixo) — por exemplo, depois que o usuário concede a
+  /// permissão de localização pelas Configurações do sistema e volta ao
+  /// app, sem precisar forçar o fechamento.
+  void _requestTiming(BuildContext context, LocationState locationState) {
     final prayerConfig = BlocProvider.of<PrayerTimeConfigBloc>(context).state;
     BlocProvider.of<TimingBloc>(context).add(
       RequestTiming(
         BlocProvider.of<NotificationBloc>(context).state.status,
-        BlocProvider.of<LocationBloc>(context).state,
+        locationState,
         prayerConfig.method.id,
         prayerConfig.school.id,
         prayerConfig.dayOffset,
         prayerConfig.hijriAdjustmentDays,
       ),
     );
-
-    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TimingBloc, TimingState>(
-      builder: (context, state) {
-        if (state is TimingLoading) {
+    return BlocListener<LocationBloc, LocationState>(
+      listenWhen: (previous, current) =>
+          current is LocationSuccess && previous is! LocationSuccess,
+      listener: (context, locationState) {
+        _requestTiming(context, locationState);
+      },
+      child: BlocBuilder<TimingBloc, TimingState>(
+        builder: (context, state) {
+          if (state is TimingLoading) {
+            return Scaffold(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              body: LoadingWidget(),
+            );
+          }
           return Scaffold(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            body: LoadingWidget(),
-          );
-        }
-        return Scaffold(
           // floatingActionButton: FloatingActionButton(
           //   onPressed: () async {
           //     await NotificationService().checkNotification();
@@ -164,6 +181,7 @@ class _TabScaffoldState extends State<TabScaffold> {
           ),
         );
       },
+    ),
     );
   }
 }
