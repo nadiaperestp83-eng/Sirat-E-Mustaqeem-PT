@@ -46,7 +46,7 @@ class KiblatCard extends StatelessWidget {
         builder: (context, state) {
           if (state is TimingLoaded) {
             final items = [
-              _PrayerItem('Fazr', state.timing.data.timings.fajr, _fajrIcon),
+              _PrayerItem('Fajr', state.timing.data.timings.fajr, _fajrIcon),
               _PrayerItem(
                   'Sunrise', state.timing.data.timings.sunrise, _sunriseIcon),
               _PrayerItem('Dhuhr', state.timing.data.timings.dhuhr, _dhuhrIcon),
