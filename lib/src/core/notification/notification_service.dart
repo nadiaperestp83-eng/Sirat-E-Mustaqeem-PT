@@ -1,11 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+import '../util/native_timezone.dart';
 import 'receive_notification.dart';
 
 /// notification class for handling notification related logics;
@@ -97,9 +97,9 @@ class NotificationService {
   Future<void> _configureLocalTimeZone() async {
     tz.initializeTimeZones();
 
-    final String timeZoneName = await FlutterTimezone.getLocalTimezone();
+    final String timeZoneName = await NativeTimezone.getLocalTimezone();
 
-    tz.setLocalLocation(tz.getLocation(timeZoneName!));
+    tz.setLocalLocation(tz.getLocation(timeZoneName));
   }
 
   Future<void> cancelAllNotifications() async {
