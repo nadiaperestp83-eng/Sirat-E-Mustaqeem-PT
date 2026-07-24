@@ -1,4 +1,11 @@
 
+## 💖 Apoie este projeto
+
+Se este projeto foi útil para você e deseja apoiar o desenvolvimento contínuo, considere fazer uma doação:
+
+[![Doar com PayPal](https://img.shields.io/badge/Donate-PayPal-%2300457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/ncp/payment/4JVTRSHHZ682C)
+
+
 <h1 align="center"> <img height='50' alt='icon' src='./assets/logo.png'/>  Sirate Mustaqeem - Quran, Hadith, Prayers, Duas</h1><p align="center">It’s an Islamic application that contains quran, hadees, azkar.</b>. <br> <b>Design & Developed in Flutter</b>.</p>
 
 ![Banner](assets/banner.png)
